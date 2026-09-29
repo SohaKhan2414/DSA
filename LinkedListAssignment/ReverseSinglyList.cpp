@@ -60,10 +60,11 @@ void Display()
     Node*current=head;
     while(current!=NULL)
     {
-        cout<<current->song<<" ";
+        cout<<current->song<<" -> ";
         current=current->next;
 
     }
+    cout<<"NULL";
     cout<<endl;
 }
 };
