@@ -1,21 +1,26 @@
+/*
+A banking security system stores a user's entered PIN digits as a chain of connected boxes. Before granting access, the system must verify whether the digit sequence reads the same forwards and backwards (i.e., it is a mirror sequence). The verification must not use extra memory.
+Input : [1] → [2] → [3] → [2] → [1] → NULL
+Expected Output: TRUE
+*/
 #include<iostream>
 using namespace std;
 class Node{
 public:
 Node*next;
-int data;
+int pin;
 Node(int val)
 {
     next=NULL;
-    data=val;
+    pin=val;
 }
 };
-class List
+class Bank
 {
 public:
 Node*head;
 Node*tail;
-List()
+Bank()
 {
     head=NULL;
     tail=NULL;
@@ -64,7 +69,7 @@ bool PalindromeCheck()
    Node*second=secondhalf;
    while(second!=NULL)
    {
-    if(first->data!=second->data)
+    if(first->pin!=second->pin)
     {
         return false;
     }
@@ -78,7 +83,7 @@ void Display()
     Node*temp=head;
     while(temp!=NULL)
     {
-    cout<<temp->data<<" -> ";
+    cout<<temp->pin<<" -> ";
     temp=temp->next;
     }
     cout<<"NULL";
@@ -87,14 +92,14 @@ void Display()
 };
 int main()
 {
- List ll;
- ll.PushFront(1);
- ll.PushFront(2);
- ll.PushFront(3);
- ll.PushFront(2);
- ll.PushFront(1);
- ll.Display();
- if(ll.PalindromeCheck())
+ Bank b;
+ b.PushFront(1);
+ b.PushFront(2);
+ b.PushFront(3);
+ b.PushFront(2);
+ b.PushFront(1);
+ b.Display();
+ if(b.PalindromeCheck())
  {
     cout<<"True."<<endl;
  }
@@ -104,3 +109,4 @@ int main()
  }
  return 0;
 }
+     
