@@ -131,6 +131,8 @@ else
 {
     cout << "Stack 2 is not empty." << endl;
 }
+    return 0;
+}
 
 
 }
