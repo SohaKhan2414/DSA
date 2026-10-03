@@ -4,150 +4,169 @@ using namespace std;
 class Stack
 {
 public:
-    char *arr;
     int top;
     int size;
+    char *arr;
 
     Stack(int size)
     {
         this->size = size;
-        top = -1;
         arr = new char[size];
+        top = -1;
     }
 
-    void push(char val)
+    void Push(char val)
     {
-        if(top == size - 1)
-        {
-            cout << "Overflow" << endl;
-        }
-        else
+        if(top < size - 1)
         {
             top++;
             arr[top] = val;
         }
-    }
-
-    char pop()
-    {
-        if(top == -1)
+        else
         {
-            return -1;
+            cout << "Stack Overflow." << endl;
         }
-
-        char value = arr[top];
-        top--;
-        return value;
     }
 
-    char peek()
+    void Pop()
     {
-        if(top == -1)
+        if(top >= 0)
         {
-            return -1;
+            top--;
         }
         else
         {
-           return arr[top];
+            cout << "Stack underflow." << endl;
+        }
+    }
+
+    char Peek()
+    {
+        if(top >= 0)
+        {
+            return arr[top];
+        }
+        else
+        {
+            cout << "Stack underflow." << endl;
+            return '\0';
         }
     }
 
     bool Isempty()
     {
-        return top == -1;
+        if(top == -1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
-    int precedence(char op)
+    ~Stack()
     {
-        if(op == '+' || op == '-')
-        {
-            return 1;
-        }
-        else if(op == '*' || op == '/')
-        {
-            return 2;
-        }
-        else if(op == '^')
-        {
-            return 3;
-        }
+        delete [] arr;
+    }
+};
 
-        return 0;
+int Precedence(char op)
+{
+    if(op == '+' || op == '-')
+    {
+        return 1;
     }
 
-    bool Isoperand(char ch)
+    if(op == '*' || op == '/' || op == '%')
     {
+        return 2;
+    }
+
+    return 0;
+}
+
+bool IsOperator(char ch)
+{
+    if(ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '%')
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+int main()
+{
+    char infix[100];
+    char postfix[100];
+
+    cout << "Enter infix expression: ";
+    cin >> infix;
+
+    Stack s(100);
+
+    int j = 0;
+
+    for(int i = 0; infix[i] != '\0'; i++)
+    {
+        char ch = infix[i];
+
         if((ch >= 'A' && ch <= 'Z') ||
            (ch >= 'a' && ch <= 'z') ||
            (ch >= '0' && ch <= '9'))
         {
-            return true;
-        }
-
-        return false;
-    }
-};
-
-int main()
-{
-    char expression[100];
-    char output[100];
-    int j = 0;
-
-    cout << "Enter infix expression: ";
-    cin >> expression;
-
-    Stack s(100);
-
-    for(int i = 0; expression[i] != '\0'; i++)
-    {
-        char current = expression[i];
-
-        if(s.Isoperand(current))
-        {
-            output[j] = current;
+            postfix[j] = ch;
             j++;
         }
-        else if(current == '(')
+
+        else if(ch == '(')
         {
-            s.push(current);
+            s.Push(ch);
         }
-        else if(current == ')')
+
+        else if(ch == ')')
         {
-            while(!s.Isempty() && s.peek() != '(')
+            while(!s.Isempty() && s.Peek() != '(')
             {
-                output[j] = s.pop();
+                postfix[j] = s.Peek();
                 j++;
+                s.Pop();
             }
 
             if(!s.Isempty())
             {
-                s.pop();
+                s.Pop();
             }
         }
-        else
+
+        else if(IsOperator(ch))
         {
             while(!s.Isempty() &&
-                  s.peek() != '(' &&
-                  s.precedence(s.peek()) >= s.precedence(current))
+                  s.Peek() != '(' &&
+                  Precedence(s.Peek()) >= Precedence(ch))
             {
-                output[j] = s.pop();
+                postfix[j] = s.Peek();
                 j++;
+                s.Pop();
             }
 
-            s.push(current);
+            s.Push(ch);
         }
     }
 
     while(!s.Isempty())
     {
-        output[j] = s.pop();
+        postfix[j] = s.Peek();
         j++;
+        s.Pop();
     }
 
-    output[j] = '\0';
+    postfix[j] = '\0';
 
-    cout << "Postfix: " << output << endl;
+    cout << "Postfix Expression: " << postfix << endl;
 
     return 0;
 }
