@@ -4,79 +4,117 @@ using namespace std;
 class Stack
 {
 public:
-    int arr[100];
     int top;
+    int size;
+    int *arr;
 
-    Stack()
+    Stack(int size)
     {
-        top=-1;
+        this->size = size;
+        arr = new int[size];
+        top = -1;
     }
 
-    void push(int val)
+    void Push(int val)
     {
-        top++;
-        arr[top]=val;
-    }
-
-    int pop()
-    {
-        if(top==-1)
+        if(top < size - 1)
         {
-            return -1;
+            top++;
+            arr[top] = val;
         }
+        else
+        {
+            cout << "Stack Overflow." << endl;
+        }
+    }
 
-        int val=arr[top];
-        top--;
-        return val;
+    void Pop()
+    {
+        if(top >= 0)
+        {
+            top--;
+        }
+        else
+        {
+            cout << "Stack underflow." << endl;
+        }
+    }
+
+    int Peek()
+    {
+        if(top >= 0)
+        {
+            return arr[top];
+        }
+        else
+        {
+            cout << "Stack underflow." << endl;
+            return '\0';
+        }
     }
 
     bool Isempty()
     {
-        return top==-1;
-    }
-};
-
-int main()
-{
-    Stack s;
-    string exp;
-
-    cout<<"Enter postfix expression: ";
-    cin>>exp;
-
-    for(int i=0; exp[i]!='\0'; i++)
-    {
-        char current=exp[i];
-
-        if(current>='0' && current<='9')
+        if(top == -1)
         {
-            s.push(current-'0');
+            return true;
         }
         else
         {
-            int b=s.pop();
-            int a=s.pop();
-
-            if(current=='+')
-            {
-                s.push(a+b);
-            }
-            else if(current=='-')
-            {
-                s.push(a-b);
-            }
-            else if(current=='*')
-            {
-                s.push(a*b);
-            }
-            else if(current=='/')
-            {
-                s.push(a/b);
-            }
+            return false;
         }
     }
 
-    cout<<"Answer = "<<s.pop()<<endl;
+    ~Stack()
+    {
+        delete [] arr;
+    }
+};
+int main()
+{
+    char postfix[100];
+    cout<<"Enter Postfix expression: "<<endl;
+    cin>>postfix;
+    Stack s(100);
+    for(int i=0;postfix[i]!='\0';i++)
+    {
+        char ch=postfix[i];
+        if(ch>='0'&&ch<='9')
+        {
+            int num=ch-'0';
+            s.Push(num);
+        }
+        else if(ch=='+'||ch=='-'||ch=='*'||ch=='/'||ch=='%')
+        {
+            int first=s.Peek();
+            s.Pop();
+            int second=s.Peek();
+            s.Pop();
+            int result;
+            if(ch=='+')
+            {
+            result=second+first;
+            }
+            else if(ch=='-')
+            {
+            result=second-first;
+            }
+            else if(ch=='*')
+            {
+            result=second*first;
+            }
+            else if(ch=='/')
+            {
+            result=second/first;
+            }
+            else 
+            {
+            result=second%first;
+            }
+            s.Push(result);
+        }
+    }
+    cout<<"Answer: "<<s.Peek()<<endl;
 
     return 0;
 }
